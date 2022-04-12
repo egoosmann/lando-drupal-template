@@ -5,9 +5,12 @@
 
 lando_green "Compare template versions..."
 
+cd /tmp
+
+wget -q https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/.lando.base.yml
+
 current_version=$(awk '/template_version:/{print $NF;}' /app/.lando.base.yml)
-newest_template=$(wget -qO- https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/.lando.base.yml)
-newest_version=$(wget -qO- $newest_template)
+newest_version=$(awk '/template_version:/{print $NF;}' /tmp/.lando.base.yml)
 
 if [[ $current_version = $newest_version ]]
 then
