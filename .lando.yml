@@ -7,6 +7,7 @@
 
 name: [LANDO_NAME]
 recipe: [LANDO_RECIPE]
+template: 1.0
 config:
   php: '[PHP_VERSION]'
   composer_version: '[COMPOSER_VERSION]'
