@@ -5,6 +5,7 @@
 # Require drupal/core-dev and phpspec/prophecy-phpunit as dev dependency in your composer.json and create a phpunit.xml
 # file in the root of your project in order to use the test command
 
+recipe: drupal9
 template_version: '1.0.0'
 
 config:
