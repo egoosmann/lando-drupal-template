@@ -25,7 +25,6 @@ else
   then
     lando_green "Updating your .lando.base.yml file"
     mv /tmp/.lando.base.yml /app/.lando.base.yml
-    lando_green "Replace file."
     lando_check "Your .lando.base.yml has been updated!"
   fi
 fi
