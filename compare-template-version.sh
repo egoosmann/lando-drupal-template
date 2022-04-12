@@ -7,7 +7,7 @@ lando_green "Start base file version check"
 
 cd /tmp
 
-lando_check "Dowloading base file from repository"
+lando_check "Dowload base file from repository"
 wget -q https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/.lando.base.yml
 
 current_version=$(awk '/template_version:/{print $NF;}' /app/.lando.base.yml)
@@ -19,13 +19,15 @@ then
   lando_check "Your base file is up to date!"
 else
   lando_red "Your base file is outdated!"
-  read -p "Do you want to update your base file? [Y/n] " -r
+  read -p "Do you want to update your base file? [y/N] " -r
   echo # (optional) move to a new line
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
-    lando_green "Updating your base file"
+    lando_green "Update your base file"
     mv /tmp/.lando.base.yml /app/.lando.base.yml
     lando_check "Your base file has been updated!"
+  else
+    lando_yellow "Skip base file update"
   fi
 fi
 
