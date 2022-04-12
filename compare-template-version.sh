@@ -14,10 +14,10 @@ newest_version=$(awk '/template_version:/{print $NF;}' /tmp/.lando.base.yml)
 
 rm -f /tmp/.lando.base.yml
 
-# if [[ $current_version = $newest_version ]]
-# then
-#   lando_green "Your .lando.base.yml is up to date!"
-# else
+if [[ $current_version = $newest_version ]]
+then
+  lando_green "Your .lando.base.yml is up to date!"
+else
   lando_red "Your .lando.base.yml is outdated!"
   read -p "Do you want to update your .lando.base.yml file? [Y/n] " -n 1 -r
   echo # (optional) move to a new line
@@ -25,4 +25,4 @@ rm -f /tmp/.lando.base.yml
   then
     lando_green "Replace file."
   fi
-# fi
+fi
