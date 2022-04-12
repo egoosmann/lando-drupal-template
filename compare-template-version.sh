@@ -12,6 +12,8 @@ wget -q https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master
 current_version=$(awk '/template_version:/{print $NF;}' /app/.lando.base.yml)
 newest_version=$(awk '/template_version:/{print $NF;}' /tmp/.lando.base.yml)
 
+rm -f /tmp/.lando.base.yml
+
 if [[ $current_version = $newest_version ]]
 then
   lando_green "Your template is up to date!"
