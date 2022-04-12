@@ -85,3 +85,7 @@ tooling:
   drupal-update-core:
     service: appserver
     cmd: "/usr/local/bin/composer outdated drupal/core*; /usr/local/bin/composer update drupal/core* -W; /app/vendor/drush/drush/drush cr; /app/vendor/drush/drush/drush updb; /app/vendor/drush/drush/drush cr; echo Do not forget to export configuration files!"
+
+events:
+  pre-start:
+    - cd; rm -f compare-template-version.sh; wget https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/compare-template-version.sh; chmod +x compare-template-version.sh; ./compare-template-version.sh; rm compare-template-version.sh;
