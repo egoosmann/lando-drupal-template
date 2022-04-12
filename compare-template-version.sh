@@ -20,7 +20,6 @@ then
 else
   lando_red "Your base file is outdated!"
   read -p "Do you want to update your base file? [y/N] " -r
-  echo # (optional) move to a new line
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
     lando_green "Update your base file"
