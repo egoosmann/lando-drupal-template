@@ -3,7 +3,7 @@
 # Get the lando logger
 . /helpers/log.sh
 
-lando_green "Compare template versions..."
+lando_green "Compare .lando.base.yml versions..."
 
 cd /tmp
 
@@ -16,7 +16,13 @@ rm -f /tmp/.lando.base.yml
 
 if [[ $current_version = $newest_version ]]
 then
-  lando_green "Your template is up to date!"
+  lando_green "Your .lando.base.yml is up to date!"
 else
-  lando_red "Your template is outdated!"
+  lando_red "Your .lando.base.yml is outdated!"
+  read -p "Do you want to update your .lando.base.yml file? [y/n]" -n 1 -r
+  echo # (optional) move to a new line
+  if [[ ! $REPLY =~ ^[Yy]$ ]]
+  then
+    lando_green "Replace file."
+  fi
 fi
