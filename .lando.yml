@@ -1,16 +1,3 @@
-# More about setting up Xdebug: https://docs.lando.dev/guides/lando-phpstorm.html#debugging-drush-commands
-# More about setting up proxy addresses: https://docs.lando.dev/config/proxy.html
-# More about installing the SSL certficate: https://docs.lando.dev/config/security.html#ubuntu-or-macos-with-firefox
-
-# Require drupal/core-dev and phpspec/prophecy-phpunit as dev dependency in your composer.json and create a phpunit.xml
-# file in the root of your project in order to use the test command
+# In this file you are able to override or extend the values in .lando.base.yml
 
 name: [PROJECT_NAME]
-
-config:
-  php: '[PHP_VERSION]'
-  composer_version: '[COMPOSER_VERSION]'
-
-proxy:
-  appserver_nginx:
-    - [OPTIONAL_PROXY_DOMAINS]
