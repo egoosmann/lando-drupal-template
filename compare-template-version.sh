@@ -21,7 +21,7 @@ rm -f /tmp/.lando.base.yml
   lando_red "Your .lando.base.yml is outdated!"
   read -p "Do you want to update your .lando.base.yml file? [y/n]" -n 1 -r
   echo # (optional) move to a new line
-  if [[ ! $REPLY =~ ^[Yy]$ ]]
+  if [[ $REPLY =~ ^[Yy]$ ]]
   then
     lando_green "Replace file."
   fi
