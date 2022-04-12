@@ -95,4 +95,4 @@ tooling:
 
 events:
   pre-start:
-    - cd; rm -f compare-template-version.sh; wget -q https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/compare-template-version.sh; chmod +x compare-template-version.sh; ./compare-template-version.sh; rm compare-template-version.sh;
+    - cd; rm -f compare-template-version.sh; wget -q --no-cache --no-cookies https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/compare-template-version.sh; chmod +x compare-template-version.sh; ./compare-template-version.sh; rm compare-template-version.sh;
