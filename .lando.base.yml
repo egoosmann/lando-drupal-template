@@ -5,14 +5,10 @@
 # Require drupal/core-dev and phpspec/prophecy-phpunit as dev dependency in your composer.json and create a phpunit.xml
 # file in the root of your project in order to use the test command
 
-name: [LANDO_NAME]
-recipe: [LANDO_RECIPE]
 config:
-  php: '[PHP_VERSION]'
-  composer_version: '[COMPOSER_VERSION]'
-  via: [WEBSERVER]
-  webroot: [WEBROOT]
-  database: [DATABASE]
+  via: nginx
+  webroot: web
+  database: mariadb
   xdebug: true
 
 proxy:
@@ -27,7 +23,7 @@ proxy:
 
 services:
   node:
-    type: node:[NODE_VERSION]
+    type: node:14
     overrides:
       ports:
         - "3000:3000"
@@ -40,6 +36,10 @@ services:
     portforward: true
     hogfrom:
       - appserver
+  cache:
+    type: redis:4.0
+    portforward: 6380
+    persist: true
   appserver:
     overrides:
       environment:
@@ -56,6 +56,8 @@ tooling:
     service: node
   node:
     service: node
+  redis-cli:
+    service: cache
   test:
     service: appserver
     cmd: "php /app/vendor/bin/phpunit -c /app/phpunit.xml"
