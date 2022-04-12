@@ -18,7 +18,7 @@ if [[ $current_version = $newest_version ]]
 then
   lando_check "Your base file is up to date!"
 else
-  lando_error "Your base file is outdated!"
+  lando_red "Your base file is outdated!"
   read -p "Do you want to update your base file? [y/N] " -r
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
@@ -26,7 +26,7 @@ else
     mv /tmp/.lando.base.yml /app/.lando.base.yml
     lando_check "Your base file has been updated!"
   else
-    lando_warn "Skip base file update"
+    lando_yellow "Skip base file update"
   fi
 fi
 
