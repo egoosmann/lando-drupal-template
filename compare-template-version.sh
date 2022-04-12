@@ -19,7 +19,7 @@ then
   lando_check "Your .lando.base.yml is up to date!"
 else
   lando_red "Your .lando.base.yml is outdated!"
-  read -p "Do you want to update your .lando.base.yml file? [Y/n] " -n 1 -r
+  read -p "Do you want to update your .lando.base.yml file? [Y/n] " -r
   echo # (optional) move to a new line
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
