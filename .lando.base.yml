@@ -8,6 +8,8 @@
 template_version: '1.0.0'
 
 config:
+  php: '7.4'
+  composer_version: '2.1.10'
   via: nginx
   webroot: web
   database: mariadb
