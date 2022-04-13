@@ -13,7 +13,7 @@ config:
   via: nginx
   webroot: web
   database: mariadb
-  xdebug: true
+  xdebug: false
 
 proxy:
   appserver_nginx:
