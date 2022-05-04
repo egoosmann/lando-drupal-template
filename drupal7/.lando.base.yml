@@ -6,7 +6,7 @@
 # file in the root of your project in order to use the test command
 
 recipe: drupal7
-template_version: '1.0.3'
+template_version: '1.0.2'
 
 config:
   php: '7.4'
