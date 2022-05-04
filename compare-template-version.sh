@@ -7,8 +7,10 @@ echo "Starting base file version check"
 
 cd /tmp
 
+recipe=$(awk '/recipe:/{print $NF;}' /app/.lando.base.yml)
+
 echo "Dowload base file from repository"
-curl -sO https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal9/.lando.base.yml
+curl -sO "https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/${recipe}/.lando.base.yml"
 
 current_version=$(awk '/template_version:/{print $NF;}' /app/.lando.base.yml)
 newest_version=$(awk '/template_version:/{print $NF;}' /tmp/.lando.base.yml)
