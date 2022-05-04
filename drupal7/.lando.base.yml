@@ -43,14 +43,6 @@ services:
     type: redis:4.0
     portforward: 6380
     persist: true
-  appserver:
-    overrides:
-      environment:
-        DRUSH_OPTIONS_URI: "localhost"
-        PHP_IDE_CONFIG: "serverName=lando"
-        SIMPLETEST_BASE_URL: "http://simpletest.localhost"
-        SIMPLETEST_DB: "mysql://drupal7:drupal7@database/drupal7"
-        MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox"]}}, "http://chrome:9515"]'
 
 tooling:
   npx:
@@ -61,35 +53,18 @@ tooling:
     service: node
   redis-cli:
     service: cache
-  test:
+  drupal-update-status:
     service: appserver
-    cmd: "php /app/vendor/bin/phpunit -c /app/phpunit.xml"
-  drupalcs:
+    cmd: "drush ups"
+  drupal-update-all:
     service: appserver
-    cmd: "/app/vendor/bin/phpcs --standard=Drupal,DrupalPractice"
-    description: Run phpcs Drupal Coding Standards against a given file or directory.
-  drupalcbf:
-    service: appserver
-    cmd: "/app/vendor/bin/phpcbf --standard=Drupal"
-    description: Automatically fix Drupal coding standards suggestions.
-  drupal-check:
-    service: appserver
-    cmd: "vendor/bin/drupal-check -ad"
-    description: Check Drupal code for deprecations and discover bugs via static analysis.
-  phpcbf:
-    service: appserver
-    cmd: "/app/vendor/bin/phpcbf --standard=PHPCompatibility --runtime-set testVersion 7.4 --extensions=php,module,inc,install,test,profile,theme,info"
-    description: Automatically fix PHPCompatibility coding standards suggestions for PHP 7.4.
-  phpcs:
-    service: appserver
-    cmd: "/app/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 7.4 --extensions=php,module,inc,install,test,profile,theme,info"
-    description: Check code against the PHPCompatibility standard for PHP 7.4.
-  drupal-update:
-    service: appserver
-    cmd: "/usr/local/bin/composer outdated drupal/*; /usr/local/bin/composer update drupal/* -W; /app/vendor/drush/drush/drush cr; /app/vendor/drush/drush/drush updb; /app/vendor/drush/drush/drush cr; echo Do not forget to export configuration files!"
+    cmd: "drush up -y"
   drupal-update-core:
     service: appserver
-    cmd: "/usr/local/bin/composer outdated drupal/core*; /usr/local/bin/composer update drupal/core* -W; /app/vendor/drush/drush/drush cr; /app/vendor/drush/drush/drush updb; /app/vendor/drush/drush/drush cr; echo Do not forget to export configuration files!"
+    cmd: "drush up drupal -y"
+  drupal-update-security-only:
+    service: appserver
+    cmd: "drush up --security-only -y"
 
 events:
   pre-start:
