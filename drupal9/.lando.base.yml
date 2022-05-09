@@ -6,7 +6,7 @@
 # file in the root of your project in order to use the test command
 
 recipe: drupal9
-template_version: '1.0.2'
+template_version: '1.0.3'
 
 config:
   php: '7.4'
@@ -85,12 +85,18 @@ tooling:
     service: appserver
     cmd: "/app/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 7.4 --extensions=php,module,inc,install,test,profile,theme,info"
     description: Check code against the PHPCompatibility standard for PHP 7.4.
-  drupal-update:
+  drupal-update-status:
+    service: appserver
+    cmd: "/usr/local/bin/composer outdated drupal/*"
+  drupal-update-all:
     service: appserver
     cmd: "/usr/local/bin/composer outdated drupal/*; /usr/local/bin/composer update drupal/* -W; /app/vendor/drush/drush/drush cr; /app/vendor/drush/drush/drush updb; /app/vendor/drush/drush/drush cr; echo Do not forget to export configuration files!"
   drupal-update-core:
     service: appserver
-    cmd: "/usr/local/bin/composer outdated drupal/core*; /usr/local/bin/composer update drupal/core* -W; /app/vendor/drush/drush/drush cr; /app/vendor/drush/drush/drush updb; /app/vendor/drush/drush/drush cr; echo Do not forget to export configuration files!"
+    cmd: "/usr/local/bin/composer outdated drupal/core 'drupal/core-*'; /usr/local/bin/composer update drupal/core 'drupal/core-*' -W; /app/vendor/drush/drush/drush cr; /app/vendor/drush/drush/drush updb; /app/vendor/drush/drush/drush cr; echo Do not forget to export configuration files!"
+  drupal-update-security-only:
+    service: appserver
+    cmd: "echo Composer based projects do not have the possibility to perform security updates only!"
 
 events:
   pre-start:
