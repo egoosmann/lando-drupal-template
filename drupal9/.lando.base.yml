@@ -6,7 +6,7 @@
 # file in the root of your project in order to use the test command
 
 recipe: drupal9
-template_version: '1.0.3'
+template_version: '1.0.4'
 
 config:
   php: '7.4'
@@ -45,6 +45,9 @@ services:
     portforward: 6380
     persist: true
   appserver:
+    xdebug: true
+    build_as_root:
+      - rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -o -USR2 php-fpm
     overrides:
       environment:
         DRUSH_OPTIONS_URI: "localhost"
@@ -97,6 +100,16 @@ tooling:
   drupal-update-security-only:
     service: appserver
     cmd: "echo Composer based projects do not have the possibility to perform security updates only!"
+  xdebug-on:
+    service: appserver
+    description: Enable xdebug for nginx.
+    cmd: rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && docker-php-ext-enable xdebug && pkill -o -USR2 php-fpm && echo "Xdebug enabled"
+    user: root
+  xdebug-off:
+    service: appserver
+    description: Disable xdebug for nginx.
+    cmd: rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -o -USR2 php-fpm && echo "Xdebug disabled"
+    user: root
 
 events:
   pre-start:
