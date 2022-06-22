@@ -27,4 +27,4 @@ rm -rf /app/web/sites/default/files.lando.bak
 # Create new backup of the files
 mv /app/web/sites/default/files /app/web/sites/default/files.lando.bak
 # Copy the new files from the archive to the files folder.
-cp /tmp/archive-${host}/web/sites/${host}/files /app/web/sites/default/.
+cp -r /tmp/archive-${host}/web/sites/${host}/files /app/web/sites/default/.
