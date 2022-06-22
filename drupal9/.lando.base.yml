@@ -110,6 +110,12 @@ tooling:
     description: Disable xdebug for nginx.
     cmd: rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -o -USR2 php-fpm && echo "Xdebug disabled"
     user: root
+  sync:
+    service: appserver
+    level: app
+    description: Sync database and files from server.
+    cmd:
+      - cd; curl -sO https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/sync-from-server.sh; chmod +x sync-from-server.sh; ./sync-from-server.sh; rm sync-from-server.sh;
 
 events:
   pre-start:
