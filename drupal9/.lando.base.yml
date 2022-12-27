@@ -6,7 +6,7 @@
 # file in the root of your project in order to use the test command
 
 recipe: drupal9
-template_version: '1.0.5'
+template_version: '1.0.6'
 
 config:
   php: '8.1'
@@ -27,7 +27,7 @@ proxy:
 
 services:
   node:
-    type: node:14
+    type: node:16
     overrides:
       ports:
         - "3000:3000"
