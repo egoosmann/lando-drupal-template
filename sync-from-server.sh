@@ -4,10 +4,10 @@ host=$2
 address="${user}@${host}"
 
 ssh ${address} <<EOF
-  cd
-  mkdir .lando
-  drush @${host} sql-dump > .lando/database-${host}.sql
-  drush @${host} archive:dump --destination=/home/${user}/.lando/archive-${host}.tar --no-core
+  cd ~/${host}
+  mkdir ~/.lando
+  drush sql-dump > ~/.lando/database-${host}.sql
+  drush archive:dump --destination=/home/${user}/.lando/archive-${host}.tar --no-core
   exit
 EOF
 
