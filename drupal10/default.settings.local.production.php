@@ -31,9 +31,7 @@ $settings['config_sync_directory'] = '../config/sync';
 $settings['hash_salt'] = '';
 
 // ### Trusted host patterns
-$settings['trusted_host_patterns'] = array_merge([
-  'localhost',
-], $base_domains);
+$settings['trusted_host_patterns'] = $base_domains;
 
 // ### Database.
 $databases['default']['default'] = [
