@@ -2,7 +2,9 @@
 
 use Drupal\Component\Utility\Crypt;
 
-define('LANDO_INFO', json_decode($_ENV['LANDO_INFO'], TRUE));
+if (!defined('LANDO_INFO')) {
+  define('LANDO_INFO', json_decode($_ENV['LANDO_INFO'], TRUE));
+}
 
 /*
  |--------------------------------------------------------------------------
@@ -46,7 +48,7 @@ $config['reroute_email.settings']['enable'] = TRUE;
  |  Settings to connect to the local database.
 */
 
-$db_name = LANDO_INFO['database']['creds']['database'];
+$db_name = LANDO_INFO['database']['creds']['database' ];
 $db_user = LANDO_INFO['database']['creds']['user'];
 $db_pass = LANDO_INFO['database']['creds']['password'];
 $db_host = LANDO_INFO['database']['internal_connection']['host'];
