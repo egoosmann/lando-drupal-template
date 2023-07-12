@@ -28,6 +28,7 @@ $config['smtp.settings']['smtp_protocol'] = 'standard';
 
 // ### Settings
 $settings['config_sync_directory'] = '../config/sync';
+$settings['file_private_path'] = '../private';
 $settings['hash_salt'] = '';
 
 // ### Trusted host patterns

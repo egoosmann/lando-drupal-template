@@ -82,6 +82,7 @@ $config['smtp.settings']['smtp_protocol'] = 'standard';
 
 $settings['container_yamls'][] = 'sites/default/services.yml';
 $settings['config_sync_directory'] = '../config/sync';
+$settings['file_private_path'] = '../private';
 
 // Do not change this line, because the file is committed to the repository.
 // Read more: https://drupal.stackexchange.com/questions/271393/why-is-it-possible-to-write-any-string-in-the-hash-salt
