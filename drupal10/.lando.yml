@@ -1,0 +1,3 @@
+# In this file you are able to override or extend the values in .lando.base.yml
+
+name: [PROJECT_NAME]
