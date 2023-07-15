@@ -84,4 +84,13 @@ else {
 
   $config['views.settings']['ui']['show']['sql_query']['enabled'] = FALSE;
   $config['views.settings']['ui']['show']['performance_statistics'] = FALSE;
+
+  if (file_exists('modules/contrib/redis/example.services.yml')) {
+    $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
+    $settings['redis.connection']['interface'] = 'PhpRedis';
+    $settings['redis.connection']['host'] = '127.0.0.1';
+    $settings['redis_compress_length'] = 100;
+    $settings['cache']['default'] = 'cache.backend.redis';
+    $settings['cache_prefix'] = $db_name . '_';
+  }
 }

@@ -48,7 +48,7 @@ $config['reroute_email.settings']['enable'] = TRUE;
  |  Settings to connect to the local database.
 */
 
-$db_name = LANDO_INFO['database']['creds']['database' ];
+$db_name = LANDO_INFO['database']['creds']['database'];
 $db_user = LANDO_INFO['database']['creds']['user'];
 $db_pass = LANDO_INFO['database']['creds']['password'];
 $db_host = LANDO_INFO['database']['internal_connection']['host'];
@@ -178,4 +178,14 @@ else {
 
   $config['views.settings']['ui']['show']['sql_query']['enabled'] = FALSE;
   $config['views.settings']['ui']['show']['performance_statistics'] = FALSE;
+
+  if (file_exists('modules/contrib/redis/example.services.yml')) {
+    $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
+    $settings['redis.connection']['interface'] = 'PhpRedis';
+    $settings['redis.connection']['host'] = 'cache';
+    $settings['redis_compress_length'] = 100;
+    $settings['cache']['default'] = 'cache.backend.redis';
+    $settings['cache_prefix'] = $db_name . '_';
+  }
 }
+
