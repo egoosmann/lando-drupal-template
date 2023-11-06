@@ -90,10 +90,24 @@ $settings['hash_salt'] = Crypt::hashBase64($db_name.$db_user.$db_pass.$db_host.$
 
 /*
  |--------------------------------------------------------------------------
+ | Evironment indicator settings
+ |--------------------------------------------------------------------------
+ |
+ |  Settings for the Environment Indicator module.
+ |
+*/
+if (defined('LANDO_INFO')) {
+  $config['environment_indicator.indicator']['name'] = 'Development';
+  $config['environment_indicator.indicator']['fg_color'] = '#000000';
+  $config['environment_indicator.indicator']['bg_color'] = '#000000';
+}
+
+/*
+ |--------------------------------------------------------------------------
  | PHP Settings
  |--------------------------------------------------------------------------
  |
- |  Settings for Solr search platform
+ |  Settings for displaying PHP errors.
  |
 */
 
