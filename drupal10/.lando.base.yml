@@ -6,7 +6,7 @@
 # file in the root of your project in order to use the test command
 
 recipe: drupal10
-template_version: '1.0.2'
+template_version: '1.0.3'
 
 config:
   php: '8.1'
@@ -82,12 +82,12 @@ tooling:
     description: Check Drupal code for deprecations and discover bugs via static analysis.
   phpcbf:
     service: appserver
-    cmd: "/app/vendor/bin/phpcbf --standard=PHPCompatibility --runtime-set testVersion 7.4 --extensions=php,module,inc,install,test,profile,theme,info"
-    description: Automatically fix PHPCompatibility coding standards suggestions for PHP 7.4.
+    cmd: "/app/vendor/bin/phpcbf --standard=PHPCompatibility --runtime-set testVersion 8.1 --extensions=php,module,inc,install,test,profile,theme,info"
+    description: Automatically fix PHPCompatibility coding standards suggestions for PHP 8.1.
   phpcs:
     service: appserver
-    cmd: "/app/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 7.4 --extensions=php,module,inc,install,test,profile,theme,info"
-    description: Check code against the PHPCompatibility standard for PHP 7.4.
+    cmd: "/app/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 8.1 --extensions=php,module,inc,install,test,profile,theme,info"
+    description: Check code against the PHPCompatibility standard for PHP 8.1.
   dus:
     service: appserver
     cmd: "/usr/local/bin/composer outdated drupal/*"
