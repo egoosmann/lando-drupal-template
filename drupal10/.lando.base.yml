@@ -6,7 +6,7 @@
 # file in the root of your project in order to use the test command
 
 recipe: drupal10
-template_version: '1.0.1'
+template_version: '1.0.2'
 
 config:
   php: '8.1'
@@ -50,9 +50,9 @@ services:
       - rm -f /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && pkill -o -USR2 php-fpm
     overrides:
       environment:
-        DRUSH_OPTIONS_URI: "localhost"
+        DRUSH_OPTIONS_URI: "https://localhost"
         PHP_IDE_CONFIG: "serverName=lando"
-        SIMPLETEST_BASE_URL: "http://simpletest.localhost"
+        SIMPLETEST_BASE_URL: "https://simpletest.localhost"
         SIMPLETEST_DB: "mysql://drupal10:drupal10@database/drupal10"
         MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless", "--no-sandbox"]}}, "http://chrome:9515"]'
 
