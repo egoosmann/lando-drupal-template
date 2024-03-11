@@ -69,6 +69,7 @@ $config['smtp.settings']['smtp_host'] = 'mailhog';
 $config['smtp.settings']['smtp_hostbackup'] = '';
 $config['smtp.settings']['smtp_port'] = '1025';
 $config['smtp.settings']['smtp_protocol'] = 'standard';
+$config['smtp.settings']['smtp_autotls'] = 'off';
 
 /*
  |--------------------------------------------------------------------------
