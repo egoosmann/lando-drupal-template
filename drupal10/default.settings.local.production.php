@@ -26,6 +26,10 @@ $config['smtp.settings']['smtp_port'] = '1025';
 $config['smtp.settings']['smtp_protocol'] = 'standard';
 */
 
+// ### Sentry
+$config['raven.settings']['client_key'] = NULL; // php logging
+$config['raven.settings']['public_dsn'] = NULL; // javascript logging
+
 // ### Settings
 $settings['config_sync_directory'] = '../config/sync';
 $settings['file_private_path'] = '../private';
