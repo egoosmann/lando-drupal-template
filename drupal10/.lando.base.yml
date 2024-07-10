@@ -6,7 +6,7 @@
 # file in the root of your project in order to use the test command
 
 recipe: drupal10
-template_version: '1.0.5'
+template_version: '1.0.6'
 
 config:
   php: '8.3'
@@ -94,7 +94,19 @@ tooling:
     description: Displays the update status of your Drupal installation.
   dua:
     service: appserver
-    cmd: "/usr/local/bin/composer outdated drupal/*; /usr/local/bin/composer update drupal/* -W; /app/vendor/drush/drush/drush cr; /app/vendor/drush/drush/drush updb; /app/vendor/drush/drush/drush cr; echo Do not forget to export configuration files!"
+    cmd:
+      - /usr/local/bin/composer outdated drupal/*
+      - chmod 777 web/sites/default
+      - chmod 666 web/sites/default/*settings.php
+      - chmod 666 web/sites/default/*services.yml
+      - /usr/local/bin/composer update drupal/* -W
+      - chmod 755 web/sites/default
+      - chmod 644 web/sites/default/*settings.php
+      - chmod 644 web/sites/default/*services.yml
+      - /app/vendor/drush/drush/drush cr
+      - /app/vendor/drush/drush/drush updb
+      - /app/vendor/drush/drush/drush cr
+      - echo Do not forget to export configuration files!
     description: Performs all available and allowed (according to composer.json) updates.
   duc:
     service: appserver
