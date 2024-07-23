@@ -29,6 +29,8 @@ $config['smtp.settings']['smtp_protocol'] = 'standard';
 // ### Sentry
 $config['raven.settings']['client_key'] = NULL; // php logging
 $config['raven.settings']['public_dsn'] = NULL; // javascript logging
+$config['raven.settings']['environment'] = NULL; // environment name
+$config['raven.settings']['release'] = NULL; // release or version
 
 // ### Settings
 $settings['config_sync_directory'] = '../config/sync';
