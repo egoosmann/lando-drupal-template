@@ -76,7 +76,7 @@ $config['smtp.settings']['smtp_autotls'] = 'off';
  | Sentry/Raven settings
  |--------------------------------------------------------------------------
  |
- |  Settings for setting up SMTP/Mail.
+ |  Settings for setting up Raven/Sentry.
  |
 */
 $config['raven.settings']['client_key'] = NULL; // php logging
