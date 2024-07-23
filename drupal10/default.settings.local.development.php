@@ -81,6 +81,8 @@ $config['smtp.settings']['smtp_autotls'] = 'off';
 */
 $config['raven.settings']['client_key'] = NULL; // php logging
 $config['raven.settings']['public_dsn'] = NULL; // javascript logging
+$config['raven.settings']['environment'] = NULL; // environment name
+$config['raven.settings']['release'] = NULL; // release or version
 
 /*
  |--------------------------------------------------------------------------
