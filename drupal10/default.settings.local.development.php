@@ -189,7 +189,7 @@ if ($disable_cache) {
   $config['views.settings']['ui']['show']['sql_query']['enabled'] = TRUE;
   $config['views.settings']['ui']['show']['performance_statistics'] = TRUE;
 
-  $cache_bins = ['bootstrap','config','data','default','discovery','dynamic_page_cache','entity','menu','migrate','render','rest','static','toolbar'];
+  $cache_bins = ['bootstrap','config','data','default','discovery','dynamic_page_cache','entity','menu','migrate','render','rest','static','toolbar','page'];
   foreach ($cache_bins as $bin) {
     $settings['cache']['bins'][$bin] = 'cache.backend.null';
   }
