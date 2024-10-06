@@ -9,7 +9,7 @@ echo "Connect with ${address}."
 # Creates the .lando directory on the remote server if it doesn't exist.
 # Creates archives of the files and database.
 echo "Create archives of the files and database on te remote server."
-ssh -q -o StrictHostKeychecking=no ${address} <<EOF
+ssh -o StrictHostKeychecking=no ${address} <<EOF
   cd ~/${host}
 
   if [ ! -d .lando-sync ]; then
