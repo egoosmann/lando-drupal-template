@@ -3,7 +3,7 @@
 # More about installing the SSL certificate: https://docs.lando.dev/config/security.html#ubuntu-or-macos-with-firefox
 
 recipe: drupal11
-template_version: '1.0.0'
+template_version: '1.0.1'
 
 config:
   php: '8.3'
