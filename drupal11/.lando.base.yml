@@ -1,0 +1,162 @@
+# More about setting up Xdebug: https://docs.lando.dev/guides/lando-phpstorm.html#debugging-drush-commands
+# More about setting up proxy addresses: https://docs.lando.dev/config/proxy.html
+# More about installing the SSL certificate: https://docs.lando.dev/config/security.html#ubuntu-or-macos-with-firefox
+
+recipe: drupal11
+template_version: '1.0.0'
+
+config:
+  php: '8.3'
+  via: nginx
+  webroot: web
+  database: mariadb
+  xdebug: 'develop,debug'
+
+proxy:
+  appserver_nginx:
+    - localhost
+    - browsersync.localhost
+    - simpletest.localhost
+  mailhog:
+    - mailhog.localhost
+  phpmyadmin:
+    - phpmyadmin.localhost
+
+services:
+  node:
+    type: node:20
+    overrides:
+      ports:
+        - "3000:3000"
+  phpmyadmin:
+    type: phpmyadmin
+    hosts:
+      - database
+  mailhog:
+    type: mailhog
+    portforward: true
+    hogfrom:
+      - appserver
+  cache:
+    type: redis:7.0
+    portforward: 6380
+    persist: true
+  appserver:
+    overrides:
+      environment:
+        DRUSH_OPTIONS_URI: "https://localhost"
+        SIMPLETEST_BASE_URL: "https://simpletest.localhost"
+        SIMPLETEST_DB: "sqlite://localhost/dev/shm/test.sqlite" # Use database in memory for simpletest, use "mysql://drupal11:drupal11@database/drupal11" for persistent database.
+        MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless"]}}, "http://chrome:9515"]'
+
+tooling:
+  npx:
+    service: node
+  npm:
+    service: node
+  node:
+    service: node
+  redis-cli:
+    service: cache
+
+  ### Setups ###
+  setup-settings:
+    service: appserver
+    cmd:
+      - cp web/sites/default/default.settings.php web/sites/default/settings.php
+      - sed -i "$(( $(wc -l < web/sites/default/settings.php) - 5 + 1)),\$s/# //g" web/sites/default/settings.php
+      - cp web/sites/default/default.settings.local.development.php web/sites/default/settings.local.php
+      - echo "Settings files has been setup."
+  setup-tests:
+    service: appserver
+    cmd:
+      - composer require --dev drupal/core-dev
+      - composer require --dev phpspec/prophecy-phpunit
+      - cp /app/web/core/phpunit.xml.dist /app/phpunit.xml
+      - sed -i "s|tests\/bootstrap\.php|/app/web/core/tests/bootstrap.php|g" phpunit.xml
+      - echo "Setup complete. Run 'lando test' to execute tests."
+  setup-rector:
+    service: appserver
+    cmd:
+      - composer require --dev palantirnet/drupal-rector
+      - cp vendor/palantirnet/drupal-rector/rector.php .
+
+  ### Sync ###
+  sync:
+    service: appserver
+    level: app
+    description: Sync database and files from server.
+    cmd:
+      - curl -sO https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/scripts/sync.sh
+      - chmod +x sync.sh && ./sync.sh $0 $1 && rm sync.sh && echo "Sync finished!"
+
+  ### Updates ###
+  dus:
+    service: appserver
+    cmd: "/usr/local/bin/composer outdated drupal/*"
+    description: Displays the update status of your Drupal installation.
+  dua:
+    service: appserver
+    cmd:
+      - /usr/local/bin/composer outdated drupal/*
+      - chmod 777 web/sites/default
+      - chmod 666 web/sites/default/*settings.php
+      - chmod 666 web/sites/default/*services.yml
+      - /usr/local/bin/composer update drupal/* -W
+      - chmod 755 web/sites/default
+      - chmod 644 web/sites/default/*settings.php
+      - chmod 644 web/sites/default/*services.yml
+      - /app/vendor/drush/drush/drush cr
+      - /app/vendor/drush/drush/drush updb
+      - /app/vendor/drush/drush/drush cr
+      - echo "Do not forget to export configuration files!"
+    description: Performs all available and allowed (according to composer.json) updates.
+  duc:
+    service: appserver
+    cmd:
+      - /usr/local/bin/composer outdated drupal/core*
+      - chmod 777 web/sites/default
+      - chmod 666 web/sites/default/*settings.php
+      - chmod 666 web/sites/default/*services.yml
+      - /usr/local/bin/composer update drupal/core 'drupal/core-*' -W
+      - chmod 755 web/sites/default
+      - chmod 644 web/sites/default/*settings.php
+      - chmod 644 web/sites/default/*services.yml
+      - /app/vendor/drush/drush/drush cr
+      - /app/vendor/drush/drush/drush updb
+      - /app/vendor/drush/drush/drush cr
+      - echo "Do not forget to export configuration files!"
+    description: Updates Drupal core only.
+
+  ### Tests ###
+  test:
+    service: appserver
+    cmd: "php /app/vendor/bin/phpunit -c /app/web/core/phpunit.xml.dist"
+  drupalcs:
+    service: appserver
+    cmd: "/app/vendor/bin/phpcs --standard=Drupal,DrupalPractice"
+    description: Run phpcs Drupal Coding Standards against a given file or directory.
+  drupalcbf:
+    service: appserver
+    cmd: "/app/vendor/bin/phpcbf --standard=Drupal"
+    description: Automatically fix Drupal coding standards suggestions.
+  drupal-check:
+    service: appserver
+    cmd: "/app/vendor/bin/drupal-check -ad"
+    description: Check Drupal code for deprecations and discover bugs via static analysis.
+  phpcbf:
+    service: appserver
+    cmd: "/app/vendor/bin/phpcbf --standard=PHPCompatibility --runtime-set testVersion 8.3 --extensions=php,module,inc,install,test,profile,theme,info"
+    description: Automatically fix PHPCompatibility coding standards suggestions for PHP 8.3.
+  phpcs:
+    service: appserver
+    cmd: "/app/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 8.3 --extensions=php,module,inc,install,test,profile,theme,info"
+    description: Check code against the PHPCompatibility standard for PHP 8.3.
+  rector:
+    service: appserver
+    cmd: "/app/vendor/bin/rector process"
+    description: Run Rector to automatically upgrade your codebase. Use --dry-run to see the changes before applying them.
+
+events:
+  pre-start:
+    - cd; curl -sO https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/scripts/compare-version.sh; chmod +x compare-version.sh; ./compare-version.sh; rm compare-version.sh;
