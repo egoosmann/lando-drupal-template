@@ -80,6 +80,14 @@ tooling:
     cmd:
       - composer require --dev palantirnet/drupal-rector
       - cp vendor/palantirnet/drupal-rector/rector.php .
+  setup-default-modules:
+    service: appserver
+    cmd:
+      - composer require drupal/environment_indicator drupal/redis drupal/smtp drupal/raven
+      - /app/vendor/bin/drush cset locale.settings translation.import_enabled 0 -y
+      - /app/vendor/bin/drush en environment_indicator redis smtp raven -y
+      - /app/vendor/bin/drush cset locale.settings translation.import_enabled 1 -y
+      - echo "Default modules have been installed."
 
   ### Sync ###
   sync:
@@ -106,9 +114,9 @@ tooling:
       - chmod 755 web/sites/default
       - chmod 644 web/sites/default/*settings.php
       - chmod 644 web/sites/default/*services.yml
-      - /app/vendor/drush/drush/drush cr
-      - /app/vendor/drush/drush/drush updb
-      - /app/vendor/drush/drush/drush cr
+      - /app/vendor/bin/drush cr
+      - /app/vendor/bin/drush updb
+      - /app/vendor/bin/drush cr
       - echo "Do not forget to export configuration files!"
     description: Performs all available and allowed (according to composer.json) updates.
   duc:
@@ -122,9 +130,9 @@ tooling:
       - chmod 755 web/sites/default
       - chmod 644 web/sites/default/*settings.php
       - chmod 644 web/sites/default/*services.yml
-      - /app/vendor/drush/drush/drush cr
-      - /app/vendor/drush/drush/drush updb
-      - /app/vendor/drush/drush/drush cr
+      - /app/vendor/bin/drush cr
+      - /app/vendor/bin/drush updb
+      - /app/vendor/bin/drush cr
       - echo "Do not forget to export configuration files!"
     description: Updates Drupal core only.
 
