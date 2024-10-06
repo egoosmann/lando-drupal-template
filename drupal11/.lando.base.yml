@@ -159,4 +159,5 @@ tooling:
 
 events:
   pre-start:
-    - cd; curl -sO https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/scripts/compare-version.sh; chmod +x compare-version.sh; ./compare-version.sh; rm compare-version.sh;
+    - curl -sO https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/scripts/compare-version.sh
+    - chmod +x compare-version.sh && ./compare-version.sh && rm compare-version.sh;
