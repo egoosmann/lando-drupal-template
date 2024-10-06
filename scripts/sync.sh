@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Get the lando logger
+. /helpers/log.sh
+
 user=$1
 host=$2
 address="${user}@${host}"
