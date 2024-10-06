@@ -3,7 +3,7 @@
 # Get the lando logger
 . /helpers/log.sh
 
-echo "Starting base file version check"
+lando_green "Starting base file version check."
 
 cd /tmp
 
@@ -27,9 +27,9 @@ else
     echo "Update your base file"
     mv /tmp/.lando.base.yml /app/.lando.base.yml
     lando_green "Your base file has been updated!"
-    lando rebuild -y
+    lando_yellow "You need to rebuild your containers (with 'lando rebuild') now."
   else
-    lando_yellow "Skip base file update"
+    lando_yellow "Skip base file update."
   fi
 fi
 
