@@ -27,6 +27,7 @@ else
     echo "Update your base file"
     mv /tmp/.lando.base.yml /app/.lando.base.yml
     lando_green "Your base file has been updated!"
+    lando rebuild -y
   else
     lando_yellow "Skip base file update"
   fi
