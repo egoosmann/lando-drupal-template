@@ -170,6 +170,6 @@ tooling:
     description: Run Rector to automatically upgrade your codebase. Use --dry-run to see the changes before applying them.
 
 events:
-  pre-start:
+  post-start:
     - curl -sO https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/scripts/compare-version.sh
     - chmod +x compare-version.sh && ./compare-version.sh && rm compare-version.sh;
