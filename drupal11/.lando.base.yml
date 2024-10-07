@@ -59,35 +59,39 @@ tooling:
   redis-cli:
     service: cache
 
-  ### Setups ###
-  setup-settings:
+  ### Scaffolding ###
+  scaffold:settings:
     service: appserver
     cmd:
+      - curl -so web/sites/default/default.settings.local.development.php https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.development.php
+      - curl -so web/sites/default/default.settings.local.production.php https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.production.php
+      - curl -so web/sites/default/default.settings.local.overall.php https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.overall.php
       - cp web/sites/default/default.settings.php web/sites/default/settings.php
       - sed -i "$(( $(wc -l < web/sites/default/settings.php) - 5 + 1)),\$s/# //g" web/sites/default/settings.php
       - cp web/sites/default/default.settings.local.development.php web/sites/default/settings.local.php
-      - echo "Settings files has been setup."
-  setup-tests:
+      - echo "Settings files has been scaffolded."
+  scaffold:tests:
     service: appserver
     cmd:
       - composer require --dev drupal/core-dev
       - composer require --dev phpspec/prophecy-phpunit
       - cp /app/web/core/phpunit.xml.dist /app/phpunit.xml
       - sed -i "s|tests\/bootstrap\.php|/app/web/core/tests/bootstrap.php|g" phpunit.xml
-      - echo "Setup complete. Run 'lando test' to execute tests."
-  setup-rector:
+      - echo "Scaffolding test dependencies complete. Run 'lando test' to execute tests."
+  scaffold:rector:
     service: appserver
     cmd:
       - composer require --dev palantirnet/drupal-rector
       - cp vendor/palantirnet/drupal-rector/rector.php .
-  setup-default-modules:
+      - echo "Rector has been scaffolded."
+  scaffold:modules:
     service: appserver
     cmd:
-      - composer require drupal/environment_indicator drupal/redis drupal/smtp drupal/raven
+      - composer require drupal/environment_indicator drupal/redis drupal/smtp drupal/raven drupal/antibot drupal/config_override_warn
       - /app/vendor/bin/drush cset locale.settings translation.import_enabled 0 -y
-      - /app/vendor/bin/drush en environment_indicator redis smtp raven -y
+      - /app/vendor/bin/drush en environment_indicator redis smtp raven antibot config_override_warn -y
       - /app/vendor/bin/drush cset locale.settings translation.import_enabled 1 -y
-      - echo "Default modules have been installed."
+      - echo "Default modules have been downloaded and installed."
 
   ### Sync ###
   sync:
