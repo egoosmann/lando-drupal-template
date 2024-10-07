@@ -48,6 +48,13 @@ $settings['redis_interface'] = 'PhpRedis';
 $settings['redis_host'] = '127.0.0.1';
 $settings['redis_compress_length'] = 100;
 
+// ### Seckit
+$settings['seckit_csp_enabled'] = TRUE;
+$settings['seckit_csp_report_only'] = TRUE;
+$settings['seckit_csp_upgrade_requests'] = TRUE;
+$settings['seckit_hsts_enabled'] = TRUE;
+$settings['seckit_various_disable_autocomplete'] = TRUE;
+
 // ### Include overall settings
 if (file_exists($app_root . '/' . $site_path . '/default.settings.local.overall.php')) {
   include $app_root . '/' . $site_path . '/default.settings.local.overall.php';
