@@ -47,6 +47,3 @@ $settings['redis_compress_length'] = 100;
 if (file_exists($app_root . '/' . $site_path . '/default.settings.local.overall.php')) {
   include $app_root . '/' . $site_path . '/default.settings.local.overall.php';
 }
-
-// ### Overrides
-// Place any project specific settings or config (like keys, passwords, etc.) here.
