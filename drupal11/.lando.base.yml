@@ -63,9 +63,9 @@ tooling:
   scaffold:settings:
     service: appserver
     cmd:
-      - curl -so web/sites/default/default.settings.local.development.php https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.development.php
-      - curl -so web/sites/default/default.settings.local.production.php https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.production.php
-      - curl -so web/sites/default/default.settings.local.overall.php https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.overall.php
+      - curl -s https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.development.php > web/sites/default/default.settings.local.development.php
+      - curl -s https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.production.php > web/sites/default/default.settings.local.production.php
+      - curl -s https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.overall.php > web/sites/default/default.settings.local.overall.php
       - cp web/sites/default/default.settings.php web/sites/default/settings.php
       - sed -i "$(( $(wc -l < web/sites/default/settings.php) - 5 + 1)),\$s/# //g" web/sites/default/settings.php
       - cp web/sites/default/default.settings.local.development.php web/sites/default/settings.local.php
