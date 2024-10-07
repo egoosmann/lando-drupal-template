@@ -25,12 +25,17 @@ $settings['db_port'] = '3306';
 $settings['hash_salt'] = '';
 
 // ### SMTP
+$settings['smtp_on'] = TRUE;
 $settings['smtp_username'] = '';
 $settings['smtp_password'] = '';
 $settings['smtp_host'] = '';
 $settings['smtp_port'] = '587'; // 25, 465, 587, 1025
 $settings['smtp_protocol'] = 'tls'; // standard, ssl, tls
-$settings['smtp_autotls'] = 'on';
+$settings['smtp_autotls'] = TRUE;
+$settings['smtp_from'] = '';
+$settings['smtp_fromname'] = '';
+$settings['smtp_allowhtml'] = TRUE;
+$settings['smtp_debugging'] = FALSE;
 
 // ### Sentry
 $settings['sentry_client_key'] = NULL; // php logging
