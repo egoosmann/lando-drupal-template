@@ -157,11 +157,11 @@ if (is_dir("$app_root/modules/contrib/redis")) {
 
 // ### Seckit
 if (is_dir("$app_root/modules/contrib/seckit")) {
-  $settings['seckit.settings']['seckit_xss']['csp']['checkbox'] = $settings['seckit_csp_enabled'];
-  $settings['seckit.settings']['seckit_xss']['csp']['report-only'] = $settings['seckit_csp_report_only'];
-  $settings['seckit.settings']['seckit_xss']['csp']['upgrade-req'] = $settings['seckit_csp_upgrade_requests'];
-  $settings['seckit.settings']['seckit_ssl']['hsts'] = $settings['seckit_hsts_enabled'];
-  $settings['seckit.settings']['seckit_various']['disable_autocomplete'] = $settings['seckit_various_disable_autocomplete'];
+  $config['seckit.settings']['seckit_xss']['csp']['checkbox'] = $settings['seckit_csp_enabled'];
+  $config['seckit.settings']['seckit_xss']['csp']['report-only'] = $settings['seckit_csp_report_only'];
+  $config['seckit.settings']['seckit_xss']['csp']['upgrade-req'] = $settings['seckit_csp_upgrade_requests'];
+  $config['seckit.settings']['seckit_ssl']['hsts'] = $settings['seckit_hsts_enabled'];
+  $config['seckit.settings']['seckit_various']['disable_autocomplete'] = $settings['seckit_various_disable_autocomplete'];
 }
 
 /*
