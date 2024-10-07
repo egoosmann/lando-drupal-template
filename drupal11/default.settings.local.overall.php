@@ -124,12 +124,17 @@ if (is_dir("$app_root/modules/contrib/environment_indicator")) {
 
 // ### SMTP
 if (is_dir("$app_root/modules/contrib/smtp")) {
+  $config['smtp.settings']['smtp_on'] = $settings['smtp_on'];
   $config['smtp.settings']['smtp_username'] = $settings['smtp_username'];
   $config['smtp.settings']['smtp_password'] = $settings['smtp_password'];
   $config['smtp.settings']['smtp_host'] = $settings['smtp_host'];
   $config['smtp.settings']['smtp_port'] = $settings['smtp_port'];
   $config['smtp.settings']['smtp_protocol'] = $settings['smtp_protocol'];
   $config['smtp.settings']['smtp_autotls'] = $settings['smtp_autotls'];
+  $config['smtp.settings']['smtp_from'] = $settings['smtp_from'];
+  $config['smtp.settings']['smtp_fromname'] = $settings['smtp_fromname'];
+  $config['smtp.settings']['smtp_allowhtml'] = $settings['smtp_allowhtml'];
+  $config['smtp.settings']['smtp_debugging'] = $settings['smtp_debugging'];
 }
 
 // ### Sentry
@@ -149,6 +154,8 @@ if (is_dir("$app_root/modules/contrib/redis")) {
   $settings['cache']['default'] = 'cache.backend.redis';
   $settings['cache_prefix'] = $settings['db_name'] . '_';
 }
+
+
 
 /*
  |--------------------------------------------------------------------------
