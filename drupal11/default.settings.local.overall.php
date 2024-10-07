@@ -149,3 +149,15 @@ if (is_dir("$app_root/modules/contrib/redis")) {
   $settings['cache']['default'] = 'cache.backend.redis';
   $settings['cache_prefix'] = $settings['db_name'] . '_';
 }
+
+/*
+ |--------------------------------------------------------------------------
+ | Project specific settings
+ |--------------------------------------------------------------------------
+ |
+ |  Settings for project specific settings.
+ |
+*/
+if (file_exists($app_root . '/' . $site_path . '/settings.local.specific.php')) {
+  include $app_root . '/' . $site_path . '/settings.local.specific.php';
+}
