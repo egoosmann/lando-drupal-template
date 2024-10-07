@@ -8,8 +8,8 @@ echo "Connect with ${address}."
 
 # Creates the .lando directory on the remote server if it doesn't exist.
 # Creates archives of the files and database.
-echo "Create archives of the files and database on te remote server."
-ssh -o StrictHostKeychecking=no ${address} <<EOF
+echo "Creating archives of the files and database on te remote server."
+ssh -q -o loglevel=ERROR ${address} bash <<EOF
   cd ~/${host}
 
   if [ ! -d .lando-sync ]; then
@@ -29,7 +29,7 @@ scp -rp ${address}:/home/${user}/${host}/.lando-sync/${host}-files.tar.gz .lando
 
 # Delete the archives on the remote server.
 echo "Delete the archives to the remote machine."
-ssh -o StrictHostKeychecking=no ${address} <<EOF
+ssh -q -o StrictHostKeychecking=no ${address} bash <<EOF
   if [ -d /home/${user}/${host}/.lando-sync ]; then
       rm -rf /home/${user}/${host}/.lando-sync
   fi
@@ -39,14 +39,14 @@ EOF
 
 # Extract the archives.
 echo "Extract the local archives."
-tar -xvzf .lando-sync/${host}-db.tar.gz -C .lando-sync
-tar -xvzf .lando-sync/${host}-files.tar.gz -C .lando-sync
+tar -xzf .lando-sync/${host}-db.tar.gz -C .lando-sync
+tar -xzf .lando-sync/${host}-files.tar.gz -C .lando-sync
 
 # Import the database.
 if [ -f .lando-sync/database/database.sql ]; then
   echo "Database found in archive."
   echo "Start importing the database."
-  ./vendor/bin/drush sql-drop -y
+  ./vendor/bin/drush sql-drop -y --quiet
   ./vendor/bin/drush sqlc < .lando-sync/database/database.sql
 fi
 
