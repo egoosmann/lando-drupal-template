@@ -1,0 +1,3 @@
+# See .lando.base.yml for full documentation.
+
+name: [PROJECT_NAME]
