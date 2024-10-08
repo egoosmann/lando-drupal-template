@@ -1,192 +1,177 @@
-# More about setting up Xdebug: https://docs.lando.dev/guides/lando-phpstorm.html#debugging-drush-commands
-# More about setting up proxy addresses: https://docs.lando.dev/config/proxy.html
-# More about installing the SSL certificate: https://docs.lando.dev/config/security.html#ubuntu-or-macos-with-firefox
+<?php
 
-recipe: drupal11
-template_version: '1.0.1'
+use Drupal\Core\Installer\InstallerKernel;
 
-config:
-  php: '8.3'
-  via: nginx
-  webroot: web
-  database: mariadb
-  xdebug: 'develop,debug'
+/*
+ |--------------------------------------------------------------------------
+ | Trusted host patterns
+ |--------------------------------------------------------------------------
+ |
+ |  The base domains are used to set the trusted host patterns.
+ |
+*/
+$settings['trusted_host_patterns'] = $settings['base_domains'];
 
-proxy:
-  appserver_nginx:
-    - localhost
-    - browsersync.localhost
-    - simpletest.localhost
-  mailhog:
-    - mailhog.localhost
-  phpmyadmin:
-    - phpmyadmin.localhost
+/*
+ |--------------------------------------------------------------------------
+ | Database
+ |--------------------------------------------------------------------------
+ |
+ |  The database settings are set here.
+ |
+*/
+$databases['default']['default'] = [
+  'database' => $settings['db_name'],
+  'username' => $settings['db_user'],
+  'password' => $settings['db_pass'],
+  'prefix' => '',
+  'host' => $settings['db_host'],
+  'port' => $settings['db_port'],
+  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
+  'driver' => 'mysql',
+  'charset' => 'utf8mb4',
+  'collation' => 'utf8mb4_general_ci',
+];
 
-services:
-  node:
-    type: node:20
-    overrides:
-      ports:
-        - "3000:3000"
-  phpmyadmin:
-    type: phpmyadmin
-    hosts:
-      - database
-  mailhog:
-    type: mailhog
-    portforward: true
-    hogfrom:
-      - appserver
-  cache:
-    type: redis:7.0
-    portforward: 6380
-    persist: true
-  appserver:
-    overrides:
-      environment:
-        DRUSH_OPTIONS_URI: "https://localhost"
-        SIMPLETEST_BASE_URL: "https://simpletest.localhost"
-        SIMPLETEST_DB: "sqlite://localhost/dev/shm/test.sqlite" # Use database in memory for simpletest, use "mysql://drupal11:drupal11@database/drupal11" for persistent database.
-        MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless"]}}, "http://chrome:9515"]'
+/*
+ |--------------------------------------------------------------------------
+ | Salt
+ |--------------------------------------------------------------------------
+ |
+ |  The hash salt that is used.
+ |
+*/
+$settings['hash_salt'] = $settings['hash_salt'];
 
-tooling:
-  npx:
-    service: node
-  npm:
-    service: node
-  node:
-    service: node
-  redis-cli:
-    service: cache
+/*
+ |--------------------------------------------------------------------------
+ | Folders
+ |--------------------------------------------------------------------------
+ |
+ |  Defines the config sync directory and the private file path.
+ |
+*/
+$settings['config_sync_directory'] = '../config/sync';
+$settings['file_private_path'] = '../private';
 
-  ### Scaffolding ###
-  scaffold:settings:
-    service: appserver
-    cmd:
-      - curl -s https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.development.php > web/sites/default/default.settings.local.development.php
-      - curl -s https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.production.php > web/sites/default/default.settings.local.production.php
-      - curl -s https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/drupal11/default.settings.local.overall.php > web/sites/default/default.settings.local.overall.php
-      - cp web/sites/default/default.settings.php web/sites/default/settings.php
-      - sed -i "$(( $(wc -l < web/sites/default/settings.php) - 5 + 1)),\$s/# //g" web/sites/default/settings.php
-      - cp web/sites/default/default.settings.local.development.php web/sites/default/settings.local.php
-      - echo "Settings files has been scaffolded."
-  scaffold:tests:
-    service: appserver
-    cmd:
-      - composer require --dev drupal/core-dev
-      - composer require --dev phpspec/prophecy-phpunit
-      - cp /app/web/core/phpunit.xml.dist /app/phpunit.xml
-      - sed -i "s|tests\/bootstrap\.php|/app/web/core/tests/bootstrap.php|g" phpunit.xml
-      - echo "Scaffolding test dependencies complete. Run 'lando test' to execute tests."
-  scaffold:rector:
-    service: appserver
-    cmd:
-      - composer require --dev palantirnet/drupal-rector
-      - cp vendor/palantirnet/drupal-rector/rector.php .
-      - echo "Rector has been scaffolded."
-  scaffold:modules:
-    service: appserver
-    cmd:
-      - "
-          composer require
-          drupal/environment_indicator
-          drupal/redis
-          drupal/smtp
-          drupal/raven
-          drupal/antibot
-          drupal/config_override_warn
-          drupal/seckit
-        "
-      - "
-          /app/vendor/bin/drush en
-          environment_indicator
-          redis
-          smtp
-          raven
-          antibot
-          config_override_warn
-          seckit 
-          -y
-        "
-      - echo "Default modules have been downloaded and installed."
+/*
+ |--------------------------------------------------------------------------
+ | PHP errors
+ |--------------------------------------------------------------------------
+ |
+ |  Settings for displaying PHP errors.
+ |
+*/
+if ($settings['show_php_errors'] === TRUE) {
+  error_reporting(E_ALL);
+  ini_set('display_errors', TRUE);
+  ini_set('display_startup_errors', TRUE);
+}
 
-  ### Sync ###
-  sync:
-    service: appserver
-    level: app
-    description: Sync database and files from server.
-    cmd:
-      - curl -s https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/scripts/sync.sh > sync.sh
-      - chmod +x sync.sh && ./sync.sh $0 $1 && rm sync.sh && echo "Sync finished!"
+/*
+ |--------------------------------------------------------------------------
+ | Cache settings
+ |--------------------------------------------------------------------------
+ |
+ |  Settings for enabling or disabling the cache.
+ |
+*/
+if ($settings['disable_cache'] === TRUE) {
+  $settings['container_yamls'][] = 'sites/development.services.yml';
+  $config['system.logging']['error_level'] = 'verbose';
+  $config['system.performance']['cache']['page']['use_internal'] = FALSE;
+  $config['system.performance']['css']['preprocess'] = FALSE;
+  $config['system.performance']['css']['gzip'] = FALSE;
+  $config['system.performance']['js']['preprocess'] = FALSE;
+  $config['system.performance']['js']['gzip'] = FALSE;
+  $config['system.performance']['response']['gzip'] = FALSE;
 
-  ### Updates ###
-  dus:
-    service: appserver
-    cmd: "/usr/local/bin/composer outdated drupal/*"
-    description: Displays the update status of your Drupal installation.
-  dua:
-    service: appserver
-    cmd:
-      - /usr/local/bin/composer outdated drupal/*
-      - chmod 777 web/sites/default
-      - chmod 666 web/sites/default/*settings.php
-      - chmod 666 web/sites/default/*services.yml
-      - /usr/local/bin/composer update drupal/* -W
-      - chmod 755 web/sites/default
-      - chmod 644 web/sites/default/*settings.php
-      - chmod 644 web/sites/default/*services.yml
-      - /app/vendor/bin/drush cr
-      - /app/vendor/bin/drush updb
-      - /app/vendor/bin/drush cr
-      - echo "Do not forget to export configuration files!"
-    description: Performs all available and allowed (according to composer.json) updates.
-  duc:
-    service: appserver
-    cmd:
-      - /usr/local/bin/composer outdated drupal/core*
-      - chmod 777 web/sites/default
-      - chmod 666 web/sites/default/*settings.php
-      - chmod 666 web/sites/default/*services.yml
-      - /usr/local/bin/composer update drupal/core 'drupal/core-*' -W
-      - chmod 755 web/sites/default
-      - chmod 644 web/sites/default/*settings.php
-      - chmod 644 web/sites/default/*services.yml
-      - /app/vendor/bin/drush cr
-      - /app/vendor/bin/drush updb
-      - /app/vendor/bin/drush cr
-      - echo "Do not forget to export configuration files!"
-    description: Updates Drupal core only.
+  $config['views.settings']['ui']['show']['sql_query']['enabled'] = TRUE;
+  $config['views.settings']['ui']['show']['performance_statistics'] = TRUE;
 
-  ### Tests ###
-  test:
-    service: appserver
-    cmd: "php /app/vendor/bin/phpunit -c /app/web/core/phpunit.xml.dist"
-  drupalcs:
-    service: appserver
-    cmd: "/app/vendor/bin/phpcs --standard=Drupal,DrupalPractice"
-    description: Run phpcs Drupal Coding Standards against a given file or directory.
-  drupalcbf:
-    service: appserver
-    cmd: "/app/vendor/bin/phpcbf --standard=Drupal"
-    description: Automatically fix Drupal coding standards suggestions.
-  drupal-check:
-    service: appserver
-    cmd: "/app/vendor/bin/drupal-check -ad"
-    description: Check Drupal code for deprecations and discover bugs via static analysis.
-  phpcbf:
-    service: appserver
-    cmd: "/app/vendor/bin/phpcbf --standard=PHPCompatibility --runtime-set testVersion 8.3 --extensions=php,module,inc,install,test,profile,theme,info"
-    description: Automatically fix PHPCompatibility coding standards suggestions for PHP 8.3.
-  phpcs:
-    service: appserver
-    cmd: "/app/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 8.3 --extensions=php,module,inc,install,test,profile,theme,info"
-    description: Check code against the PHPCompatibility standard for PHP 8.3.
-  rector:
-    service: appserver
-    cmd: "/app/vendor/bin/rector process"
-    description: Run Rector to automatically upgrade your codebase. Use --dry-run to see the changes before applying them.
+  $cache_bins = ['bootstrap','config','data','default','discovery','dynamic_page_cache','entity','menu','migrate','render','rest','static','toolbar'];
+  foreach ($cache_bins as $bin) {
+    $settings['cache']['bins'][$bin] = 'cache.backend.null';
+  }
+}
+else {
+  // Enable some caching methods.
+  $config['system.logging']['error_level'] = 'hide';
+  $config['system.performance']['cache']['page']['use_internal'] = TRUE;
+  $config['system.performance']['css']['preprocess'] = TRUE;
+  $config['system.performance']['css']['gzip'] = TRUE;
+  $config['system.performance']['js']['preprocess'] = TRUE;
+  $config['system.performance']['js']['gzip'] = TRUE;
+  $config['system.performance']['response']['gzip'] = TRUE;
+  $config['views.settings']['ui']['show']['sql_query']['enabled'] = FALSE;
+  $config['views.settings']['ui']['show']['performance_statistics'] = FALSE;
+}
 
-events:
-  post-start:
-    - curl -sO https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/scripts/compare-version.sh
-    - chmod +x compare-version.sh && ./compare-version.sh && rm compare-version.sh;
+/*
+ |--------------------------------------------------------------------------
+ | Module specific settings
+ |--------------------------------------------------------------------------
+ |
+ |  Settings for several modules are set here.
+ |
+*/
+// ### Environment indicator
+if (is_dir("$app_root/modules/contrib/environment_indicator")) {
+  $config['environment_indicator.indicator']['name'] = $settings['environment'];
+  $config['environment_indicator.indicator']['fg_color'] = match($settings['environment']) {'development' => '#000000', 'staging' => '#eaa521', 'production' => '#ff0000'};
+  $config['environment_indicator.indicator']['bg_color'] = match($settings['environment']) {'development' => '#000000', 'staging' => '#eaa521', 'production' => '#ff0000'};
+}
+
+// ### SMTP
+if (is_dir("$app_root/modules/contrib/smtp")) {
+  $config['smtp.settings']['smtp_on'] = $settings['smtp_on'];
+  $config['smtp.settings']['smtp_username'] = $settings['smtp_username'];
+  $config['smtp.settings']['smtp_password'] = $settings['smtp_password'];
+  $config['smtp.settings']['smtp_host'] = $settings['smtp_host'];
+  $config['smtp.settings']['smtp_port'] = $settings['smtp_port'];
+  $config['smtp.settings']['smtp_protocol'] = $settings['smtp_protocol'];
+  $config['smtp.settings']['smtp_autotls'] = $settings['smtp_autotls'];
+  $config['smtp.settings']['smtp_from'] = $settings['smtp_from'];
+  $config['smtp.settings']['smtp_fromname'] = $settings['smtp_fromname'];
+  $config['smtp.settings']['smtp_allowhtml'] = $settings['smtp_allowhtml'];
+  $config['smtp.settings']['smtp_debugging'] = $settings['smtp_debugging'];
+}
+
+// ### Sentry
+if (is_dir("$app_root/modules/contrib/raven")) {
+  $config['raven.settings']['client_key'] = $settings['sentry_client_key']; // php logging
+  $config['raven.settings']['public_dsn'] = $settings['sentry_public_dsn']; // javascript logging
+  $config['raven.settings']['environment'] = $settings['sentry_environment']; // environment name
+  $config['raven.settings']['release'] = $settings['sentry_release']; // release or version
+}
+
+// ### Redis
+if (is_dir("$app_root/modules/contrib/redis") && $settings['disable_cache'] === TRUE) {
+  $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
+  $settings['redis.connection']['interface'] = $settings['redis_interface'];
+  $settings['redis.connection']['host'] = $settings['redis_host'];
+  $settings['redis_compress_length'] = $settings['redis_compress_length'];
+  $settings['cache']['default'] = 'cache.backend.redis';
+  $settings['cache_prefix'] = $settings['db_name'] . '_';
+}
+
+// ### Seckit
+if (is_dir("$app_root/modules/contrib/seckit")) {
+  $config['seckit.settings']['seckit_xss']['csp']['checkbox'] = $settings['seckit_csp_enabled'];
+  $config['seckit.settings']['seckit_xss']['csp']['report-only'] = $settings['seckit_csp_report_only'];
+  $config['seckit.settings']['seckit_xss']['csp']['upgrade-req'] = $settings['seckit_csp_upgrade_requests'];
+  $config['seckit.settings']['seckit_ssl']['hsts'] = $settings['seckit_hsts_enabled'];
+  $config['seckit.settings']['seckit_various']['disable_autocomplete'] = $settings['seckit_various_disable_autocomplete'];
+}
+
+/*
+ |--------------------------------------------------------------------------
+ | Project specific settings
+ |--------------------------------------------------------------------------
+ |
+ |  Settings for project specific settings.
+ |
+*/
+if (file_exists($app_root . '/' . $site_path . '/settings.local.specific.php')) {
+  include $app_root . '/' . $site_path . '/settings.local.specific.php';
+}
