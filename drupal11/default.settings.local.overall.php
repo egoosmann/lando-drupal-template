@@ -146,7 +146,7 @@ if (is_dir("$app_root/modules/contrib/raven")) {
 }
 
 // ### Redis
-if (is_dir("$app_root/modules/contrib/redis")) {
+if (is_dir("$app_root/modules/contrib/redis") && $settings['disable_cache'] === FALSE) {
   $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
   $settings['redis.connection']['interface'] = $settings['redis_interface'];
   $settings['redis.connection']['host'] = $settings['redis_host'];
