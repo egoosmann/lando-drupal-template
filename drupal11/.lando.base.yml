@@ -116,7 +116,7 @@ tooling:
     level: app
     description: Sync database and files from server.
     cmd:
-      - curl -sO https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/scripts/sync.sh
+      - curl -s https://raw.githubusercontent.com/egoosmann/lando-drupal-template/master/scripts/sync.sh > sync.sh
       - chmod +x sync.sh && ./sync.sh $0 $1 && rm sync.sh && echo "Sync finished!"
 
   ### Updates ###
