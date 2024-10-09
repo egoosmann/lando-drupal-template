@@ -46,7 +46,10 @@ services:
       environment:
         DRUSH_OPTIONS_URI: "https://localhost"
         SIMPLETEST_BASE_URL: "https://simpletest.localhost"
-        SIMPLETEST_DB: "sqlite://localhost/dev/shm/test.sqlite" # Use database in memory for simpletest, use "mysql://drupal11:drupal11@database/drupal11" for persistent database.
+        # Use sqlite database in file: sqlite://localhost/dev/shm/test.sqlite
+        # Use sqlite database in memory: sqlite://localhost/:memory:
+        # Use mysql database: mysql://drupal11:drupal11@database/drupal11
+        SIMPLETEST_DB: "sqlite://localhost/dev/shm/test.sqlite"
         MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless"]}}, "http://chrome:9515"]'
 
 tooling:
@@ -105,7 +108,7 @@ tooling:
           raven
           antibot
           config_override_warn
-          seckit 
+          seckit
           -y
         "
       - echo "Default modules have been downloaded and installed."
@@ -160,7 +163,7 @@ tooling:
   ### Tests ###
   test:
     service: appserver
-    cmd: "php /app/vendor/bin/phpunit -c /app/web/core/phpunit.xml.dist"
+    cmd: "php /app/vendor/bin/phpunit -c /app/phpunit.xml"
   drupalcs:
     service: appserver
     cmd: "/app/vendor/bin/phpcs --standard=Drupal,DrupalPractice"
