@@ -49,7 +49,7 @@ services:
         # Use sqlite database in file: sqlite://localhost/dev/shm/test.sqlite
         # Use sqlite database in memory: sqlite://localhost/:memory:
         # Use mysql database: mysql://drupal11:drupal11@database/drupal11
-        SIMPLETEST_DB: "sqlite://localhost/dev/shm/test.sqlite"
+        SIMPLETEST_DB: "sqlite://localhost/:memory:"
         MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless"]}}, "http://chrome:9515"]'
 
 tooling:
