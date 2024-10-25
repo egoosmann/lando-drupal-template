@@ -44,7 +44,7 @@ EOF
 # Extract the archives.
 echo "Extract the local archives."
 tar -xzf .lando-sync/${host}-db.tar.gz -C .lando-sync
-unzip -q .lando-sync/${host}-files.zip -d .lando-sync/${host}-files
+unzip -q .lando-sync/${host}-files.zip -d .lando-sync/files
 
 # Import the database.
 if [ -f .lando-sync/database/database.sql ]; then
