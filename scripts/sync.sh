@@ -21,7 +21,8 @@ ssh -q -o loglevel=ERROR ${address} bash <<EOF
   fi
 
   ./vendor/bin/drush archive:dump --db --destination=/home/${user}/${host}/.lando-sync/${host}-db.tar.gz --overwrite
-  zip -q -r /home/${user}/${host}/.lando-sync/${host}-files.zip /home/${user}/${host}/web/sites/default/files
+  cd /home/${user}/${host}/web/sites/default
+  zip -q -r /home/${user}/${host}/.lando-sync/${host}-files.zip files
   exit
 EOF
 
@@ -44,7 +45,7 @@ EOF
 # Extract the archives.
 echo "Extract the local archives."
 tar -xzf .lando-sync/${host}-db.tar.gz -C .lando-sync
-unzip -q .lando-sync/${host}-files.zip -d .lando-sync/files
+unzip -q .lando-sync/${host}-files.zip -d .lando-sync
 
 # Import the database.
 if [ -f .lando-sync/database/database.sql ]; then
