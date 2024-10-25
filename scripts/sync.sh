@@ -21,7 +21,7 @@ ssh -q -o loglevel=ERROR ${address} bash <<EOF
   fi
 
   ./vendor/bin/drush archive:dump --db --destination=/home/${user}/${host}/.lando-sync/${host}-db.tar.gz --overwrite
-  zip -r /home/${user}/${host}/.lando-sync/${host}-files.zip /home/${user}/${host}/web/sites/default/files
+  zip -q -r /home/${user}/${host}/.lando-sync/${host}-files.zip /home/${user}/${host}/web/sites/default/files
   exit
 EOF
 
@@ -29,7 +29,7 @@ EOF
 echo "Copy the archives to the local machine."
 mkdir .lando-sync
 scp -rp ${address}:/home/${user}/${host}/.lando-sync/${host}-db.tar.gz .lando-sync
-scp -rp ${address}:/home/${user}/${host}/.lando-sync/${host}-files.tar.gz .lando-sync
+scp -rp ${address}:/home/${user}/${host}/.lando-sync/${host}-files.zip .lando-sync
 
 # Delete the archives on the remote server.
 echo "Delete the archives to the remote machine."
@@ -44,7 +44,7 @@ EOF
 # Extract the archives.
 echo "Extract the local archives."
 tar -xzf .lando-sync/${host}-db.tar.gz -C .lando-sync
-unzip .lando-sync/${host}-files.zip -d .lando-sync/${host}-files
+unzip -q .lando-sync/${host}-files.zip -d .lando-sync/${host}-files
 
 # Import the database.
 if [ -f .lando-sync/database/database.sql ]; then
