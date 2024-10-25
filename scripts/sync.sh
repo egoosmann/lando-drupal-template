@@ -17,7 +17,9 @@ ssh -q -o loglevel=ERROR ${address} bash <<EOF
   fi
 
   ./vendor/bin/drush archive:dump --db --destination=/home/${user}/${host}/.lando-sync/${host}-db.tar.gz --overwrite
-  ./vendor/bin/drush archive:dump --files --destination=/home/${user}/${host}/.lando-sync/${host}-files.tar.gz --overwrite
+  # Because a tar file can have issues with long file names, we have to use zip.
+  # ./vendor/bin/drush archive:dump --files --destination=/home/${user}/${host}/.lando-sync/${host}-files.tar.gz --overwrite
+  zip -r /home/${user}/${host}/.lando-sync/${host}-files.zip /home/${user}/${host}/web/sites/default/files
   exit
 EOF
 
