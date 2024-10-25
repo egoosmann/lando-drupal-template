@@ -6,6 +6,10 @@ address="${user}@${host}"
 echo "Start syncing from server."
 echo "Connect with ${address}."
 
+# Because a tar file can have issues with long file names, we have to use zip. The commands below can bu used to archive and unpack with tar.
+# ./vendor/bin/drush archive:dump --files --destination=/home/${user}/${host}/.lando-sync/${host}-files.tar.gz --overwrite
+# tar -xzf .lando-sync/${host}-files.tar.gz -C .lando-sync
+
 # Creates the .lando directory on the remote server if it doesn't exist.
 # Creates archives of the files and database.
 echo "Creating archives of the files and database on te remote server."
@@ -17,8 +21,6 @@ ssh -q -o loglevel=ERROR ${address} bash <<EOF
   fi
 
   ./vendor/bin/drush archive:dump --db --destination=/home/${user}/${host}/.lando-sync/${host}-db.tar.gz --overwrite
-  # Because a tar file can have issues with long file names, we have to use zip.
-  # ./vendor/bin/drush archive:dump --files --destination=/home/${user}/${host}/.lando-sync/${host}-files.tar.gz --overwrite
   zip -r /home/${user}/${host}/.lando-sync/${host}-files.zip /home/${user}/${host}/web/sites/default/files
   exit
 EOF
@@ -42,7 +44,7 @@ EOF
 # Extract the archives.
 echo "Extract the local archives."
 tar -xzf .lando-sync/${host}-db.tar.gz -C .lando-sync
-tar -xzf .lando-sync/${host}-files.tar.gz -C .lando-sync
+unzip .lando-sync/${host}-files.zip -d .lando-sync/${host}-files
 
 # Import the database.
 if [ -f .lando-sync/database/database.sql ]; then
