@@ -118,8 +118,8 @@ else {
 // ### Environment indicator
 if (is_dir("$app_root/modules/contrib/environment_indicator")) {
   $config['environment_indicator.indicator']['name'] = $settings['environment'];
-  $config['environment_indicator.indicator']['fg_color'] = match($settings['environment']) {'development' => '#000000', 'staging' => '#eaa521', 'production' => '#ff0000', default => '#000000'};
-  $config['environment_indicator.indicator']['bg_color'] = match($settings['environment']) {'development' => '#000000', 'staging' => '#eaa521', 'production' => '#ff0000', default => '#000000'};
+  $config['environment_indicator.indicator']['fg_color'] = match($settings['environment']) {'development' => '#000000', 'test' => '#4492d7', 'staging' => '#eaa521', 'production' => '#ff0000', default => '#000000'};
+  $config['environment_indicator.indicator']['bg_color'] = match($settings['environment']) {'development' => '#000000', 'test' => '#4492d7', 'staging' => '#eaa521', 'production' => '#ff0000', default => '#000000'};
 }
 
 // ### SMTP
