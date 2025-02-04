@@ -10,6 +10,13 @@ if (!defined('LANDO_INFO')) {
 // ### Environment
 $settings['environment'] = 'development';
 
+$settings['enabled_config_overrides'] = [
+  'smtp',
+  'raven',
+  'redis',
+  'seckit',
+];
+
 // ### Domains
 $settings['base_domains'] = array_map(function ($url) {
   return trim(str_replace(['http://', 'https://'], '', $url), '/');
