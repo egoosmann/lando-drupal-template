@@ -14,6 +14,14 @@ $settings['show_php_errors'] = FALSE;
 // ### Cache
 $settings['disable_cache'] = FALSE;
 
+// ### Enabled config overrides
+$settings['enabled_config_overrides'] = [
+  'smtp',
+  'raven',
+  'redis',
+  'seckit',
+];
+
 // ### Database
 $settings['db_name'] = '';
 $settings['db_user'] = '';
