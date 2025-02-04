@@ -10,6 +10,7 @@ if (!defined('LANDO_INFO')) {
 // ### Environment
 $settings['environment'] = 'development';
 
+// ### Enabled config overrides
 $settings['enabled_config_overrides'] = [
   'smtp',
   'raven',
