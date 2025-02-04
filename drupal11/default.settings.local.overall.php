@@ -116,14 +116,14 @@ else {
  |
 */
 // ### Environment indicator
-if (is_dir("$app_root/modules/contrib/environment_indicator")) {
+if (is_dir("$app_root/modules/contrib/environment_indicator") && in_array('environment_indicator', $settings['enabled_config_overrides'])) {
   $config['environment_indicator.indicator']['name'] = $settings['environment'];
   $config['environment_indicator.indicator']['fg_color'] = match($settings['environment']) {'development' => '#000000', 'test' => '#4492d7', 'staging' => '#eaa521', 'production' => '#ff0000', default => '#000000'};
   $config['environment_indicator.indicator']['bg_color'] = match($settings['environment']) {'development' => '#000000', 'test' => '#4492d7', 'staging' => '#eaa521', 'production' => '#ff0000', default => '#000000'};
 }
 
 // ### SMTP
-if (is_dir("$app_root/modules/contrib/smtp")) {
+if (is_dir("$app_root/modules/contrib/smtp")  && in_array('smtp', $settings['enabled_config_overrides'])) {
   $config['smtp.settings']['smtp_on'] = $settings['smtp_on'];
   $config['smtp.settings']['smtp_username'] = $settings['smtp_username'];
   $config['smtp.settings']['smtp_password'] = $settings['smtp_password'];
@@ -138,7 +138,7 @@ if (is_dir("$app_root/modules/contrib/smtp")) {
 }
 
 // ### Sentry
-if (is_dir("$app_root/modules/contrib/raven")) {
+if (is_dir("$app_root/modules/contrib/raven") && in_array('raven', $settings['enabled_config_overrides'])) {
   $config['raven.settings']['client_key'] = $settings['sentry_client_key']; // php logging
   $config['raven.settings']['public_dsn'] = $settings['sentry_public_dsn']; // javascript logging
   $config['raven.settings']['environment'] = $settings['sentry_environment']; // environment name
@@ -146,7 +146,7 @@ if (is_dir("$app_root/modules/contrib/raven")) {
 }
 
 // ### Redis
-if (is_dir("$app_root/modules/contrib/redis") && $settings['disable_cache'] === FALSE) {
+if (is_dir("$app_root/modules/contrib/redis") && in_array('redis', $settings['enabled_config_overrides']) && $settings['disable_cache'] === FALSE) {
   $settings['container_yamls'][] = 'modules/contrib/redis/example.services.yml';
   $settings['redis.connection']['interface'] = $settings['redis_interface'];
   $settings['redis.connection']['host'] = $settings['redis_host'];
@@ -156,7 +156,7 @@ if (is_dir("$app_root/modules/contrib/redis") && $settings['disable_cache'] === 
 }
 
 // ### Seckit
-if (is_dir("$app_root/modules/contrib/seckit")) {
+if (is_dir("$app_root/modules/contrib/seckit") && in_array('seckit', $settings['enabled_config_overrides'])) {
   $config['seckit.settings']['seckit_xss']['csp']['checkbox'] = $settings['seckit_csp_enabled'];
   $config['seckit.settings']['seckit_xss']['csp']['report-only'] = $settings['seckit_csp_report_only'];
   $config['seckit.settings']['seckit_xss']['csp']['upgrade-req'] = $settings['seckit_csp_upgrade_requests'];
