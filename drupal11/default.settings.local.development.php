@@ -16,6 +16,7 @@ $settings['enabled_config_overrides'] = [
   'raven',
   'redis',
   'seckit',
+  'environment_indicator',
 ];
 
 // ### Domains
