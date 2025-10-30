@@ -3,7 +3,7 @@
 # More about installing the SSL certificate: https://docs.lando.dev/config/security.html#ubuntu-or-macos-with-firefox
 
 recipe: drupal11
-template_version: '1.0.3'
+template_version: '1.0.4'
 
 config:
   php: '8.3'
@@ -78,8 +78,7 @@ tooling:
     cmd:
       - composer require --dev drupal/core-dev
       - composer require --dev phpspec/prophecy-phpunit
-      - cp /app/web/core/phpunit.xml.dist /app/phpunit.xml
-      - sed -i "s|tests\/bootstrap\.php|/app/web/core/tests/bootstrap.php|g" phpunit.xml
+      - curl -s https://raw.githubusercontent.com/egoosmann/lando-drupal-template/refs/heads/master/drupal11/phpunit.xml > phpunit.xml
       - echo "Scaffolding test dependencies complete. Run 'lando test' to execute tests."
   scaffold:rector:
     service: appserver
