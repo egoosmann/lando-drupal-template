@@ -3,7 +3,7 @@
 # More about installing the SSL certificate: https://docs.lando.dev/config/security.html#ubuntu-or-macos-with-firefox
 
 recipe: drupal11
-template_version: '1.0.2'
+template_version: '1.0.3'
 
 config:
   php: '8.3'
@@ -49,7 +49,7 @@ services:
         # Use sqlite database in file: sqlite://localhost/dev/shm/test.sqlite
         # Use sqlite database in memory: sqlite://localhost/:memory:
         # Use mysql database: mysql://drupal11:drupal11@database/drupal11
-        SIMPLETEST_DB: "sqlite://localhost/:memory:"
+        SIMPLETEST_DB: "mysql://drupal11:drupal11@database/drupal11_test"
         MINK_DRIVER_ARGS_WEBDRIVER: '["chrome", {"browserName":"chrome","chromeOptions":{"args":["--disable-gpu","--headless"]}}, "http://chrome:9515"]'
 
 tooling:
@@ -163,7 +163,9 @@ tooling:
   ### Tests ###
   test:
     service: appserver
-    cmd: "php /app/vendor/bin/phpunit -c /app/phpunit.xml"
+    cmd:
+      - mysql -h database -u root -e "CREATE DATABASE IF NOT EXISTS drupal11_test; GRANT ALL PRIVILEGES ON drupal11_test.* TO 'drupal11'@'%'; FLUSH PRIVILEGES;" || true
+      - php /app/vendor/bin/phpunit -c /app/phpunit.xml --display-phpunit-deprecations
   drupalcs:
     service: appserver
     cmd: "/app/vendor/bin/phpcs --standard=Drupal,DrupalPractice"
