@@ -166,6 +166,18 @@ if (is_dir("$app_root/modules/contrib/seckit") && isset($settings['enabled_confi
 
 /*
  |--------------------------------------------------------------------------
+ | Translations
+ |--------------------------------------------------------------------------
+ |
+ |  Include translation files.
+ |
+*/
+foreach (glob($app_root . '/' . $site_path . '/translation.*.php') as $filename) {
+  include_once $filename;
+}
+
+/*
+ |--------------------------------------------------------------------------
  | Project specific settings
  |--------------------------------------------------------------------------
  |
