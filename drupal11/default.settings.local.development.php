@@ -13,6 +13,7 @@ $settings['environment'] = 'development';
 // ### Enabled config overrides
 $settings['enabled_config_overrides'] = [
   'smtp',
+  'symfony_mailer',
   'raven',
   'redis',
   'seckit',
@@ -52,6 +53,14 @@ $settings['smtp_from'] = '';
 $settings['smtp_fromname'] = '';
 $settings['smtp_allowhtml'] = TRUE;
 $settings['smtp_debugging'] = TRUE;
+
+// ### Symfony mailer
+$settings['symfony_mailer_status'] = TRUE;
+$settings['symfony_mailer_user'] = '';
+$settings['symfony_mailer_pass'] = '';
+$settings['symfony_mailer_host'] = 'mailhog';
+$settings['symfony_mailer_port'] = '1025';
+$settings['symfony_mailer_verify_peer'] = TRUE;
 
 // ### Sentry
 $settings['sentry_client_key'] = NULL; // php logging
