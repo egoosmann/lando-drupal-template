@@ -93,20 +93,18 @@ tooling:
           composer require
           drupal/environment_indicator
           drupal/redis
-          drupal/smtp
+          drupal/symfony_mailer
           drupal/raven
           drupal/antibot
-          drupal/config_override_warn
           drupal/seckit
         "
       - "
           /app/vendor/bin/drush en
           environment_indicator
           redis
-          smtp
+          symfony_mailer
           raven
           antibot
-          config_override_warn
           seckit
           -y
         "
