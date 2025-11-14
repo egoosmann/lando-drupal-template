@@ -137,6 +137,16 @@ if (is_dir("$app_root/modules/contrib/smtp") && isset($settings['enabled_config_
   $config['smtp.settings']['smtp_debugging'] = $settings['smtp_debugging'];
 }
 
+// ### Symfony mailer
+if (is_dir("$app_root/modules/contrib/symfony_mailer") && isset($settings['enabled_config_overrides']) && in_array('symfony_mailer', $settings['enabled_config_overrides'])) {
+  $config['symfony_mailer.mailer_transport.smtp']['status']['user'] = $settings['symfony_mailer_status'];
+  $config['symfony_mailer.mailer_transport.smtp']['configuration']['user'] = $settings['symfony_mailer_user'];
+  $config['symfony_mailer.mailer_transport.smtp']['configuration']['pass'] = $settings['symfony_mailer_pass'];
+  $config['symfony_mailer.mailer_transport.smtp']['configuration']['host'] = $settings['symfony_mailer_host'];
+  $config['symfony_mailer.mailer_transport.smtp']['configuration']['port'] = $settings['symfony_mailer_port'];
+  $config['symfony_mailer.mailer_transport.smtp']['configuration']['query']['verify_peer'] = $settings['symfony_mailer_verify_peer'];
+}
+
 // ### Sentry
 if (is_dir("$app_root/modules/contrib/raven") && isset($settings['enabled_config_overrides']) && in_array('raven', $settings['enabled_config_overrides'])) {
   $config['raven.settings']['client_key'] = $settings['sentry_client_key']; // php logging
